@@ -89,6 +89,26 @@
     </div>
 
     <main class="layout">
+      <a
+        class="daylight-banner"
+        href="https://www.gdufe888.top/sun/"
+        target="_blank"
+        rel="noopener noreferrer"
+        :aria-label="t('daylightLinkLabel')"
+      >
+        <svg class="daylight-banner-icon" width="48" height="48" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <circle cx="24" cy="24" r="23" fill="currentColor" opacity="0.08" />
+          <path d="M24 11a13 13 0 0 0 0 26V11Z" fill="#23485E" />
+          <path d="M24 11a13 13 0 0 1 0 26V11Z" fill="#D9A441" />
+          <path d="M24 5v3m0 32v3M5 24h3m32 0h3M10.5 10.5l2 2m23 23 2 2m0-27-2 2m-23 23-2 2" stroke="#D9A441" stroke-width="2" stroke-linecap="round" />
+        </svg>
+        <div class="daylight-banner-copy">
+          <strong>{{ t('daylightTitle') }}</strong>
+          <span>{{ t('daylightDescription') }}</span>
+        </div>
+        <span class="daylight-banner-action">{{ t('daylightAction') }} <span aria-hidden="true">↗</span></span>
+      </a>
+
       <aside class="source-panel">
         <button
           class="source-tab"
@@ -386,6 +406,10 @@ const I18N = {
   zh: {
     siteTitle: '每日AI前沿信息',
     subtitle: '开源趋势 · 社区热议 · AI 动态',
+    daylightTitle: '中国昼夜地图',
+    daylightDescription: '看日光如何掠过中国，探索二十四节气',
+    daylightAction: '探索地图',
+    daylightLinkLabel: '探索中国昼夜地图（在新标签页打开）',
     updateEvery8h: '每 8 小时更新',
     countdownHour: '时',
     countdownMin: '分',
@@ -431,6 +455,10 @@ const I18N = {
   en: {
     siteTitle: 'Daily AI Frontier',
     subtitle: 'Open Source · Community · AI Updates',
+    daylightTitle: 'China Daylight Map',
+    daylightDescription: 'Watch daylight move across China and explore the 24 solar terms',
+    daylightAction: 'Explore map',
+    daylightLinkLabel: 'Explore the China Daylight Map (opens in a new tab)',
     updateEvery8h: 'Updates every 8h',
     countdownHour: 'h ',
     countdownMin: 'm ',
@@ -1117,7 +1145,7 @@ export default {
         const payload = await response.json();
         this.sources = payload.sources || [];
         if (this.sources.length > 0) {
-          await this.selectSource(this.sources[0].id);
+          await this.selectSource(this.sources[0].id, false);
         }
       } catch (error) {
         this.errorMessage = `${this.t('loadSourceErr')}${error.message}`;
@@ -1125,7 +1153,7 @@ export default {
         this.loading = false;
       }
     },
-    async selectSource(sourceId) {
+    async selectSource(sourceId, resetScroll = true) {
       this.savePodcastPlaybackProgress();
       if (this.historyMode && this.selectedHistoryDate) {
         await this.loadHistorySource(sourceId);
@@ -1152,7 +1180,7 @@ export default {
       } finally {
         this.loading = false;
       }
-      if (shouldResetScroll) {
+      if (shouldResetScroll && resetScroll) {
         await this.$nextTick();
         this.resetFeedScroll();
       }
@@ -1465,6 +1493,80 @@ a {
   max-width: 1200px;
   margin: 0 auto;
   padding: 24px 24px 56px;
+}
+
+/* ── Daylight banner ──────────────────────── */
+
+.daylight-banner {
+  --daylight-bg: #EDF6F8;
+  --daylight-border: #CFDFE5;
+  --daylight-text: #23485E;
+  --daylight-muted: #516B79;
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 84px;
+  padding: 16px 20px;
+  border: 1px solid var(--daylight-border);
+  border-radius: var(--radius-card);
+  background: var(--daylight-bg);
+  color: var(--daylight-text);
+  transition: border-color 150ms ease;
+}
+
+.theme-dark .daylight-banner {
+  --daylight-bg: #172A36;
+  --daylight-border: #345365;
+  --daylight-text: #E1EDF3;
+  --daylight-muted: #B0C5D0;
+}
+
+.daylight-banner:hover {
+  border-color: #D9A441;
+}
+
+.daylight-banner:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 3px;
+}
+
+.daylight-banner-icon {
+  flex-shrink: 0;
+}
+
+.daylight-banner-copy {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.daylight-banner-copy strong {
+  font-size: 16px;
+  line-height: 1.4;
+}
+
+.daylight-banner-copy > span {
+  color: var(--daylight-muted);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.daylight-banner-action {
+  flex-shrink: 0;
+  margin-left: auto;
+  padding: 9px 14px;
+  border-radius: 7px;
+  background: #23485E;
+  color: #FFFFFF;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.theme-dark .daylight-banner-action {
+  background: #E6BC6A;
+  color: #172A36;
 }
 
 /* ── Source panel ─────────────────────────── */
@@ -2140,6 +2242,26 @@ a {
   .layout {
     display: block;
     padding: 12px 16px 40px;
+  }
+
+  .daylight-banner {
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 16px;
+    padding: 14px;
+  }
+
+  .daylight-banner-icon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .daylight-banner-copy {
+    flex: 1;
+  }
+
+  .daylight-banner-action {
+    padding: 8px 12px;
   }
 
   .source-panel {
